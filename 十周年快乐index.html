@@ -306,7 +306,7 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* ===== 七色拱桥彩虹（均匀细线，无缝衔接） ===== */
+        /* ===== 七色拱桥彩虹 ===== */
         #rainbow-svg {
             position: absolute;
             top: 6%;
@@ -499,11 +499,9 @@
         </div>
     </div>
 
-    <!-- ===== 最终页（全屏） ===== -->
+    <!-- ===== 最终页 ===== -->
     <div class="final-page" id="finalPage">
-        <!-- 七色拱桥彩虹（均匀细线） -->
         <svg id="rainbow-svg" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
-            <!-- 每条弧线 stroke-width 统一为 4，半径从 60 递减到 42，步长 3，无缝且均匀 -->
             <path d="M 0,100 A 90,60 0 0 1 200,100" stroke="#FF0000" stroke-width="4" fill="none" stroke-linecap="round"/>
             <path d="M 0,100 A 90,57 0 0 1 200,100" stroke="#FF7F00" stroke-width="4" fill="none" stroke-linecap="round"/>
             <path d="M 0,100 A 90,54 0 0 1 200,100" stroke="#FFFF00" stroke-width="4" fill="none" stroke-linecap="round"/>
@@ -512,7 +510,6 @@
             <path d="M 0,100 A 90,45 0 0 1 200,100" stroke="#0066FF" stroke-width="4" fill="none" stroke-linecap="round"/>
             <path d="M 0,100 A 90,42 0 0 1 200,100" stroke="#8B00FF" stroke-width="4" fill="none" stroke-linecap="round"/>
         </svg>
-
         <div class="final-title">十周年快乐</div>
         <canvas id="fireworksCanvas"></canvas>
         <div id="finalThank">（谢谢你能看到最后）</div>
@@ -524,8 +521,6 @@
     </div>
 </div>
 
-<audio id="bgm" src="起风了.mp3" loop preload="auto"></audio>
-
 <script>
     // ----- 页面管理 -----
     let currentIdx = 0;
@@ -533,9 +528,6 @@
     const dots = document.querySelectorAll('.dot');
     const finalPage = document.getElementById('finalPage');
     const card = document.getElementById('cardContainer');
-    const bgm = document.getElementById('bgm');
-    let bgmPlayed = false;
-    let voiceTimeout = null;
 
     function changePage(delta) {
         if (finalPage.classList.contains('active')) return;
@@ -546,29 +538,10 @@
         pages.forEach((p, i) => p.classList.toggle('active', i === currentIdx));
         dots.forEach((d, i) => d.classList.toggle('active', i === currentIdx));
 
-        if (voiceTimeout) {
-            clearTimeout(voiceTimeout);
-            voiceTimeout = null;
-        }
-
-        if (currentIdx === 1) {
-            new Audio('timi.mp3').play().catch(() => {});
-        }
-        if (currentIdx === 2) {
-            voiceTimeout = setTimeout(() => {
-                new Audio('duojiao.mp3').play().catch(() => {});
-            }, 2000);
-        }
-
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     card.addEventListener('click', function(e) {
-        if (!bgmPlayed) {
-            bgm.play().catch(() => {});
-            bgmPlayed = true;
-        }
-
         if (finalPage.classList.contains('active')) return;
         if (e.target.closest('button')) return;
 
@@ -633,11 +606,6 @@
         finalPage.classList.add('active');
         initFireworks();
 
-        if (voiceTimeout) {
-            clearTimeout(voiceTimeout);
-            voiceTimeout = null;
-        }
-
         setTimeout(() => {
             startFireworksShow();
         }, 300);
@@ -670,7 +638,6 @@
     }
 
     function startFireworksShow() {
-        // 1. 齐放 5 次
         for (let i = 0; i < 5; i++) {
             const x = Math.random() * canvas.width;
             const y = Math.random() * canvas.height;
@@ -727,7 +694,6 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // 桌面鼠标点击
         canvas.addEventListener('click', function(e) {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -736,7 +702,6 @@
             hideThank();
         });
 
-        // 手机多点触摸
         canvas.addEventListener('touchstart', function(e) {
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
@@ -831,7 +796,6 @@
 
     // ----- 启动 -----
     changePage(0);
-    console.log('🎉 十周年贺卡已加载！彩虹细线均匀，紫色不再突兀。');
 </script>
 </body>
 </html>
